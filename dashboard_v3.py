@@ -106,7 +106,7 @@ max_dd_pct = round(
 # ==========================
 
 st.title(
-    "🚀 Nifty market edge"
+    "🚀 Nifty Market Edge"
 )
 
 st.markdown("---")
