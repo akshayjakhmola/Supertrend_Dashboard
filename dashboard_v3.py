@@ -115,7 +115,9 @@ st.markdown("---")
 # KPI CARDS
 # ==========================
 
-c1, c2, c3, c4, c5 = st.columns(5)
+st.markdown("---")
+
+c1, c2, c3, c4, c5, c6 = st.columns(6)
 
 c1.metric(
     "Net Profit",
@@ -128,16 +130,21 @@ c2.metric(
 )
 
 c3.metric(
+    "CAGR %",
+    f"{cagr}%"
+)
+
+c4.metric(
     "Profit Factor",
     profit_factor
 )
 
-c4.metric(
+c5.metric(
     "Win Rate",
     f"{win_rate}%"
 )
 
-c5.metric(
+c6.metric(
     "Max DD",
     f"{max_dd_pct}%"
 )
