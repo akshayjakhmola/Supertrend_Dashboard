@@ -240,7 +240,7 @@ st.write(
 
     Candles : 211,213
 
-    Nifty Market Edge
+    Strategy : Nifty Market Edge
     """
 )
 c1, c2, c3, c4 = st.columns(4)
