@@ -163,7 +163,7 @@ box-shadow:0px 4px 15px rgba(0,0,0,0.3);
 ">
 
 <h1 style="color:white;margin-bottom:5px;">
-🚀 Market Edge Analytics
+ Market Edge Analytics
 </h1>
 
 <h3 style="color:#00ff99;margin-top:0;">
