@@ -47,27 +47,58 @@ st.sidebar.success(
 # LOAD DATA
 # ==========================
 
-trades = pd.read_csv(
-    "reports/supertrend_trades_2015_2026.csv"
-)
+if index_type == "NIFTY":
 
-monthly = pd.read_csv(
-    "reports/monthly_report.csv"
-)
+    trades = pd.read_csv(
+        "reports/supertrend_trades_2015_2026.csv"
+    )
 
-equity_curve = pd.read_csv(
-    "reports/equity_curve.csv"
-)
+    monthly = pd.read_csv(
+        "reports/monthly_report.csv"
+    )
 
-drawdown_curve = pd.read_csv(
-    "reports/drawdown_curve.csv"
-)
-tv_report = pd.read_csv(
-    "reports/tradingview_style_report.csv"
-)
+    equity_curve = pd.read_csv(
+        "reports/equity_curve.csv"
+    )
+
+    drawdown_curve = pd.read_csv(
+        "reports/drawdown_curve.csv"
+    )
+
+    tv_report = pd.read_csv(
+        "reports/tradingview_style_report.csv"
+    )
+
+    strategy_name = "Nifty Market Edge"
+
+else:
+
+    trades = pd.read_csv(
+        "reports/banknifty_supertrend_trades_2015_2026.csv"
+    )
+
+    monthly = pd.read_csv(
+        "reports/banknifty_monthly_report.csv"
+    )
+
+    equity_curve = pd.read_csv(
+        "reports/banknifty_equity_curve.csv"
+    )
+
+    drawdown_curve = pd.read_csv(
+        "reports/banknifty_drawdown_curve.csv"
+    )
+
+    tv_report = pd.read_csv(
+        "reports/banknifty_tradingview_style_report.csv"
+    )
+
+    strategy_name = "BankNifty Market Edge"
+
 tv_report["Entry Time"] = pd.to_datetime(
     tv_report["Entry Time"]
 )
+
 tv_report["Year"] = (
     tv_report["Entry Time"].dt.year
 )
