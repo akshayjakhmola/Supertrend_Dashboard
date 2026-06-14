@@ -240,7 +240,7 @@ st.write(
 
     Candles : 211,213
 
-    Strategy : Supertrend ATR(10) Factor(4)
+    Nifty Market Edge
     """
 )
 c1, c2, c3, c4 = st.columns(4)
