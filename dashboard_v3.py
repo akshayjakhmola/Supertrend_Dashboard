@@ -3,9 +3,18 @@ import pandas as pd
 import plotly.express as px
 
 st.set_page_config(
-    page_title="Supertrend Dashboard",
-    layout="wide"
+    page_title="Market Edge Analytics",
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
+
+st.markdown("""
+<style>
+[data-testid="collapsedControl"] {
+    display: block !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 st.caption(
     "| Zerodha Historical Data Based |"
