@@ -564,25 +564,15 @@ st.plotly_chart(
 st.markdown("---")
 
 st.subheader("📅 Monthly Performance")
-st.write(monthly.columns.tolist())
 st.dataframe(
-    monthly[
-        [
-            "Month",
-            "Trades",
-            "PnL INR",
-            "Return %",
-            "Avg PnL/Trade",
-            "Points"
-        ]
-    ],
+    monthly,
     use_container_width=True
 )
 
 fig_month = px.bar(
     monthly,
     x="Month",
-    y="Return %",
+    y="PnL INR",
     hover_data=[
         "Trades",
         "PnL INR",
