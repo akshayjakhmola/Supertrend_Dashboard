@@ -151,7 +151,7 @@ for r in results:
 # ==========================
 
 st.title(
-    "🚀 Nifty Market Edge"
+    "Nifty Market Edge"
 )
 
 st.markdown("---")
@@ -581,10 +581,19 @@ st.dataframe(
     use_container_width=True
 )
 
+monthly["Color"] = monthly["PnL INR"].apply(
+    lambda x: "Profit" if x >= 0 else "Loss"
+)
+
 fig_month = px.bar(
     monthly,
     x="Month",
     y="Return %",
+    color="Color",
+    color_discrete_map={
+        "Profit": "green",
+        "Loss": "red"
+    },
     hover_data=[
         "Trades",
         "PnL INR",
