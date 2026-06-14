@@ -64,6 +64,27 @@ net_profit = round(
     2
 )
 
+# Capital Based Return
+
+capital = 150000
+
+return_pct = round(
+    (net_profit / capital) * 100,
+    2
+)
+
+years = 11
+
+cagr = round(
+    (
+        (
+            (capital + net_profit)
+            / capital
+        ) ** (1 / years) - 1
+    ) * 100,
+    2
+)
+
 gross_profit = trades[
     trades["PnL INR"] > 0
 ]["PnL INR"].sum()
