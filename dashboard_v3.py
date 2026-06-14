@@ -469,16 +469,29 @@ st.dataframe(
     use_container_width=True
 )
 
+yearly["Color"] = yearly["PnL INR"].apply(
+    lambda x: "Profit" if x >= 0 else "Loss"
+)
+
 fig_year = px.bar(
     yearly,
     x="Year",
     y="Return %",
+    color="Color",
+    color_discrete_map={
+        "Profit": "green",
+        "Loss": "red"
+    },
     hover_data=[
         "Trades",
         "PnL INR",
         "Points"
     ],
     title="Year-wise Return % (₹1.5L Capital)"
+)
+
+fig_year.update_layout(
+    showlegend=False
 )
 
 st.plotly_chart(
