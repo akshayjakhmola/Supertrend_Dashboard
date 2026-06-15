@@ -366,19 +366,28 @@ st.plotly_chart(
 # DRAWDOWN CURVE
 # ==========================
 
-st.markdown("---")
-
 st.subheader("📉 Drawdown Curve")
 
-fig_dd = px.line(
-    drawdown_curve,
-    x="Trade",
-    y="Drawdown",
-    title="Drawdown Over Time"
-)
-fig_dd.update_traces(
-    line_color="red"
-)
+if index_type == "NIFTY":
+
+    fig_dd = px.line(
+        drawdown_curve,
+        x="Trade",
+        y="Drawdown",
+        title="Drawdown Over Time"
+    )
+
+else:
+
+    fig_dd = px.line(
+        drawdown_curve,
+        x="Trade No",
+        y="Drawdown",
+        title="Drawdown Over Time"
+    )
+
+fig_dd.update_traces(line_color="red")
+
 st.plotly_chart(
     fig_dd,
     use_container_width=True,
@@ -922,7 +931,7 @@ csv = tv_report.to_csv(index=False)
 st.download_button(
     label="📥 Download Detailed Trade Log",
     data=csv,
-    file_name="Nifty_Market_Edge_Trade_Log.csv",
+    file_name=f"{strategy_name}_Trade_Log.csv",
     mime="text/csv"
 )
 # ==========================
