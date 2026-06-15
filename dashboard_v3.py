@@ -103,11 +103,10 @@ tv_report["Year"] = (
     tv_report["Entry Time"].dt.year
 )
 
-total_candles = len(pd.read_csv(
-    "data/nifty_5min_all.csv"
-)) if index_type == "NIFTY" else len(pd.read_csv(
-    "data/banknifty_5min_all.csv"
-))
+if index_type == "NIFTY":
+    total_candles = 211213
+else:
+    total_candles = 211204
 # ==========================
 # CALCULATIONS
 # ==========================
