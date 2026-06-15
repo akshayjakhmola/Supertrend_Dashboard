@@ -248,7 +248,6 @@ Professional Quantitative Trading Analytics Dashboard
 """,
     unsafe_allow_html=True
 )
-st.markdown("---")
 
 # ==========================
 # KPI CARDS
