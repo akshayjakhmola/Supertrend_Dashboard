@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 st.set_page_config(
-    page_title="Market Edge Analytics V4",
+    page_title="Market Edge Analytics",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -36,8 +36,8 @@ st.sidebar.title(
 st.sidebar.markdown("---")
 
 index_type = st.radio(
-    "Select Portfolio",
-    ["NIFTY", "BANKNIFTY", "COMBINED"]
+    "Select Index",
+    ["NIFTY", "BANKNIFTY"]
 )
 
 st.sidebar.success(
@@ -49,95 +49,64 @@ st.sidebar.success(
 
 if index_type == "NIFTY":
 
-    trades = pd.read_csv("reports/market_edge_trades.csv")
-    monthly = pd.read_csv("reports/monthly_report.csv")
-    equity_curve = pd.read_csv("reports/equity_curve.csv")
-    drawdown_curve = pd.read_csv("reports/drawdown_curve.csv")
-    tv_report = pd.read_csv("reports/tradingview_style_report.csv")
-
-    strategy_name = "Nifty Market Edge"
-
-elif index_type == "BANKNIFTY":
-
-    trades = pd.read_csv("reports/banknifty_market_edge_trades.csv")
-    monthly = pd.read_csv("reports/banknifty_monthly_report.csv")
-    equity_curve = pd.read_csv("reports/banknifty_equity_curve.csv")
-    drawdown_curve = pd.read_csv("reports/banknifty_drawdown_curve.csv")
-    tv_report = pd.read_csv("reports/banknifty_tradingview_style_report.csv")
-
-    strategy_name = "BankNifty Market Edge"
-
-elif index_type == "COMBINED":
-
-    nifty_trades = pd.read_csv(
+    trades = pd.read_csv(
         "reports/market_edge_trades.csv"
     )
 
-    banknifty_trades = pd.read_csv(
+    monthly = pd.read_csv(
+        "reports/monthly_report.csv"
+    )
+
+    equity_curve = pd.read_csv(
+        "reports/equity_curve.csv"
+    )
+
+    drawdown_curve = pd.read_csv(
+        "reports/drawdown_curve.csv"
+    )
+
+    tv_report = pd.read_csv(
+        "reports/tradingview_style_report.csv"
+    )
+
+    strategy_name = "Nifty Market Edge"
+
+else:
+
+    trades = pd.read_csv(
         "reports/banknifty_market_edge_trades.csv"
     )
 
-    trades = pd.concat(
-        [nifty_trades, banknifty_trades],
-        ignore_index=True
+    monthly = pd.read_csv(
+        "reports/banknifty_monthly_report.csv"
     )
 
-    trades["Exit Time"] = pd.to_datetime(
-        trades["Exit Time"]
+    equity_curve = pd.read_csv(
+        "reports/banknifty_equity_curve.csv"
     )
 
-    trades = trades.sort_values(
-        "Exit Time"
+    drawdown_curve = pd.read_csv(
+        "reports/banknifty_drawdown_curve.csv"
     )
 
-    trades["Cumulative PnL INR"] = (
-        trades["PnL INR"].cumsum()
+    tv_report = pd.read_csv(
+        "reports/banknifty_tradingview_style_report.csv"
     )
 
-    equity_curve = trades[
-        ["Exit Time", "Cumulative PnL INR"]
-    ].copy()
+    strategy_name = "BankNifty Market Edge"
 
-    running_peak = (
-        trades["Cumulative PnL INR"]
-        .cummax()
-    )
+tv_report["Entry Time"] = pd.to_datetime(
+    tv_report["Entry Time"]
+)
 
-    dd = (
-        trades["Cumulative PnL INR"]
-        - running_peak
-    )
-
-    drawdown_curve = pd.DataFrame({
-        "Trade": range(1, len(trades)+1),
-        "Drawdown": dd
-    })
-
-    monthly = pd.DataFrame({
-        "Month": ["Combined"],
-        "Trades": [len(trades)],
-        "PnL INR": [trades["PnL INR"].sum()],
-        "Return %": [0],
-        "Avg PnL/Trade": [
-            trades["PnL INR"].mean()
-        ],
-        "Points": [
-            trades["Points"].sum()
-        ]
-    })
-
-    tv_report = trades.copy()
-
-    strategy_name = "Combined Portfolio"
+tv_report["Year"] = (
+    tv_report["Entry Time"].dt.year
+)
 
 if index_type == "NIFTY":
     total_candles = 211213
-
-elif index_type == "BANKNIFTY":
-    total_candles = 211204
-
 else:
-    total_candles = 422417
+    total_candles = 211204
 # ==========================
 # CALCULATIONS
 # ==========================
@@ -197,28 +166,10 @@ profit_factor = round(
     gross_profit / gross_loss,
     2
 )
-# Sharpe Ratio
 
-returns = trades["PnL INR"]
-
-if returns.std() != 0:
-    sharpe_ratio = round(
-        (returns.mean() / returns.std()) * (252 ** 0.5),
-        2
-    )
-else:
-    sharpe_ratio = 0
 largest_win = trades["PnL INR"].max()
 largest_loss = trades["PnL INR"].min()
-avg_winner = round(
-    trades[trades["PnL INR"] > 0]["PnL INR"].mean(),
-    2
-)
 
-avg_loser = round(
-    trades[trades["PnL INR"] < 0]["PnL INR"].mean(),
-    2
-)
 # Drawdown
 
 equity = trades["Cumulative PnL INR"]
@@ -263,196 +214,9 @@ for r in results:
         max_loss_streak,
         loss_streak
     )
-    
-if sharpe_ratio >= 1.5:
-    strategy_grade = "A+"
-elif sharpe_ratio >= 1:
-    strategy_grade = "A"
-elif sharpe_ratio >= 0.5:
-    strategy_grade = "B"
-else:
-    strategy_grade = "C"
-raw_profit = 2397167.50
-
-cost_profit = 1899787.50
-
-impact = raw_profit - cost_profit
 # ==========================
 # HEADER
 # ==========================
-from datetime import datetime
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
-    "📊 Overview",
-    "📈 Performance",
-    "⚠️ Risk",
-    "📋 Trades",
-    "💰 Cost",
-    "📥 Downloads"
-])
-
-with tab1:
-
-    st.subheader("📊 Overview")
-
-    st.success(
-        f"Strategy Grade : {strategy_grade}"
-    )
-    st.info(
-    f"""
-    Strategy : {strategy_name}
-
-    Trades : {total_trades:,}
-
-    Years Tested : 11+
-
-    Max DD : {max_dd_pct}%
-    """
-)
-    c1, c2, c3, c4 = st.columns(4)
-
-    c1.metric(
-    "Net Profit",
-    f"₹{net_profit:,.0f}"
-)
-    c2.metric(
-    "Win Rate",
-    f"{win_rate}%"
-)
-    c3.metric(
-    "Profit Factor",
-    profit_factor
-)
-    c4.metric(
-    "Sharpe",
-    sharpe_ratio
-)
-    
-with tab2:
-
-    st.subheader("📈 Performance")
-
-    fig = px.line(
-        equity_curve,
-        x="Exit Time",
-        y="Cumulative PnL INR",
-        title="Equity Curve"
-    )
-
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
-
-with tab3:
-
-    st.subheader("⚠️ Risk Analytics")
-
-    c1, c2, c3, c4 = st.columns(4)
-
-    c1.metric(
-        "Sharpe Ratio",
-        sharpe_ratio
-    )
-
-    c2.metric(
-        "Recovery Factor",
-        round(net_profit / max_dd, 2)
-    )
-
-    c3.metric(
-        "Largest Winner",
-        f"₹{largest_win:,.0f}"
-    )
-
-    c4.metric(
-        "Largest Loser",
-        f"₹{largest_loss:,.0f}"
-    )
-
-    c1, c2 = st.columns(2)
-
-    c1.metric(
-        "Avg Winner",
-        f"₹{avg_winner:,.0f}"
-    )
-
-    c2.metric(
-        "Avg Loser",
-        f"₹{avg_loser:,.0f}"
-    )
-    st.markdown("---")
-    
-    st.subheader("📉 Drawdown Curve")
-    
-    fig_dd = px.line(
-    drawdown_curve,
-    x="Trade",
-    y="Drawdown",
-    title="Drawdown Over Time"
-)
-    
-    fig_dd.update_traces(
-    line_color="red"
-)
-    
-    st.plotly_chart(
-    fig_dd,
-    use_container_width=True
-)
-    
-with tab4:
-
-    st.subheader("📋 Trade Explorer")
-
-    st.dataframe(
-        tv_report,
-        use_container_width=True
-    )
-
-with tab5:
-
-    st.subheader("💰 Cost Analysis")
-
-    st.info(
-        """
-        Entry Slippage : 1 Point
-
-        Exit Slippage : 1 Point
-
-        Total Slippage : 2 Points Per Trade
-        """
-    )
-
-    c1, c2, c3 = st.columns(3)
-
-    c1.metric(
-        "Raw Profit",
-        f"₹{raw_profit:,.0f}"
-    )
-
-    c2.metric(
-        "After Slippage",
-        f"₹{cost_profit:,.0f}"
-    )
-
-    c3.metric(
-        "Cost Impact",
-        f"₹{impact:,.0f}"
-    )
-
-with tab6:
-
-    st.subheader("📥 Download Center")
-
-    csv = tv_report.to_csv(index=False)
-
-    st.download_button(
-    label="📥 Download Detailed Trade Log",
-    data=csv,
-    file_name=f"{strategy_name}_Trade_Log.csv",
-    mime="text/csv",
-    key="download_tab6"
-)
 
 st.markdown(
     f"""
@@ -465,7 +229,7 @@ box-shadow:0px 4px 15px rgba(0,0,0,0.3);
 ">
 
 <h1 style="color:white;margin-bottom:5px;">
-Market Edge Analytics V4
+Market Edge Analytics
 </h1>
 
 <h3 style="color:#00ff99;margin-top:0;">
@@ -473,7 +237,7 @@ Strategy : {strategy_name}
 </h3>
 
 <p style="color:white;">
-Professional Quantitative Trading Analytics Dashboard V4
+Professional Quantitative Trading Analytics Dashboard
 </p>
 
 <p style="color:#d9d9d9;">
@@ -485,16 +249,14 @@ Professional Quantitative Trading Analytics Dashboard V4
     unsafe_allow_html=True
 )
 st.markdown("---")
-st.caption(
-    f"Last Updated: {datetime.now().strftime('%d-%m-%Y %H:%M:%S')}"
-)
+
 # ==========================
 # KPI CARDS
 # ==========================
 
 st.markdown("---")
 
-c1, c2, c3, c4, c5, c6, c7, c8 = st.columns(8)
+c1, c2, c3, c4, c5, c6 = st.columns(6)
 
 c1.metric(
     "Net Profit",
@@ -524,16 +286,6 @@ c5.metric(
 c6.metric(
     "Max DD",
     f"{max_dd_pct}%"
-)
-
-c7.metric(
-    "Sharpe",
-    sharpe_ratio
-)
-
-c8.metric(
-    "Recovery",
-    round(net_profit / max_dd, 2)
 )
 # ==========================
 # STRATEGY SCORECARD
@@ -1174,8 +926,7 @@ st.download_button(
     label="📥 Download Detailed Trade Log",
     data=csv,
     file_name=f"{strategy_name}_Trade_Log.csv",
-    mime="text/csv",
-    key="download_old"
+    mime="text/csv"
 )
 # ==========================
 # TOP LOSERS
