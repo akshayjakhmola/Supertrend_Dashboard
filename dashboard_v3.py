@@ -19,7 +19,49 @@ st.markdown("""
 st.caption(
     "| Zerodha Historical Data Based |"
 )
+st.markdown(
+    """
+    <div style="
+    padding:30px;
+    border-radius:20px;
+    background:linear-gradient(135deg,#0f172a,#1e3a8a);
+    text-align:center;
+    margin-bottom:20px;
+    box-shadow:0px 6px 20px rgba(0,0,0,0.25);
+    ">
 
+    <h1 style="
+    color:white;
+    margin-bottom:10px;
+    ">
+    🚀 Market Edge Analytics
+    </h1>
+
+    <h3 style="
+    color:#00E676;
+    margin-top:0;
+    ">
+    Institutional Grade Backtesting Dashboard
+    </h3>
+
+    <p style="
+    color:#d1d5db;
+    font-size:16px;
+    ">
+    NIFTY • BANKNIFTY • Combined Portfolio Analytics
+    </p>
+
+    <p style="
+    color:#94a3b8;
+    font-size:14px;
+    ">
+    Quantitative Research • Performance Tracking • Risk Analytics
+    </p>
+
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 # ==========================
 # SIDEBAR BRANDING
 # ==========================
@@ -474,10 +516,6 @@ background:linear-gradient(135deg,#1e3c72,#2a5298);
 text-align:center;
 box-shadow:0px 4px 15px rgba(0,0,0,0.3);
 ">
-
-<h1 style="color:white;margin-bottom:5px;">
-Market Edge Analytics V4
-</h1>
 
 <h3 style="color:#00ff99;margin-top:0;">
 Strategy : {strategy_name}
@@ -1247,3 +1285,40 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+st.markdown("""
+<style>
+.footer {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    max-width: 1400px;
+    padding: 20px;
+    text-align: center;
+    background: rgba(20,20,20,0.85);
+    backdrop-filter: blur(15px);
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: white;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.footer h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.footer p {
+    margin: 5px 0;
+    color: #cbd5e1;
+}
+</style>
+
+<div class="footer">
+    <h3>✨ Welcome to Our Platform</h3>
+    <p>Monitor • Analyze • Optimize</p>
+    <p>Empowering smarter decisions with modern technology.</p>
+</div>
+""", unsafe_allow_html=True)
