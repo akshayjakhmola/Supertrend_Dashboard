@@ -272,11 +272,17 @@ elif sharpe_ratio >= 0.5:
     strategy_grade = "B"
 else:
     strategy_grade = "C"
-raw_profit = 2397167.50
 
-cost_profit = 1899787.50
+raw_profit = net_profit
 
-impact = raw_profit - cost_profit
+cost_per_trade_pct = 2
+
+impact = (
+    trades["PnL INR"].abs() *
+    (cost_per_trade_pct / 100)
+).sum()
+
+cost_profit = raw_profit - impact
 # ==========================
 # HEADER
 # ==========================
@@ -414,14 +420,18 @@ with tab5:
     st.subheader("💰 Cost Analysis")
 
     st.info(
-        """
-        Entry Slippage : 1 Point
+    f"""
+    Cost Model : {cost_per_trade_pct}% Per Trade
 
-        Exit Slippage : 1 Point
+    Total Trades : {total_trades:,}
 
-        Total Slippage : 2 Points Per Trade
-        """
-    )
+    Raw Profit : ₹{raw_profit:,.0f}
+
+    Total Cost Impact : ₹{impact:,.0f}
+
+    After Cost Profit : ₹{cost_profit:,.0f}
+    """
+)
 
     c1, c2, c3 = st.columns(3)
 
@@ -691,7 +701,12 @@ fig_pie = px.pie(
     pie_data,
     names="Result",
     values="Count",
-    title="Winning vs Losing Trades"
+    title="Winning vs Losing Trades",
+    color="Result",
+    color_discrete_map={
+        "Winning Trades": "#00E676",
+        "Losing Trades": "#FFC107"
+    }
 )
 
 st.plotly_chart(
@@ -994,16 +1009,16 @@ c4.metric(
 st.subheader("💰 Cost Adjusted Backtest")
 
 st.info(
-    """
-    Assumption:
+    f"""
+    Cost Model : {cost_per_trade_pct}% Per Trade
 
-    Entry Slippage : 1 Point
+    Total Trades : {total_trades:,}
 
-    Exit Slippage  : 1 Point
+    Raw Profit : ₹{raw_profit:,.0f}
 
-    Total Slippage : 2 Points Per Trade
+    Total Cost Impact : ₹{impact:,.0f}
 
-    Total Trades   : 3826
+    After Cost Profit : ₹{cost_profit:,.0f}
     """
 )
 
