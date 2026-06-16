@@ -10,6 +10,23 @@ st.set_page_config(
 
 st.markdown("""
 <style>
+
+/* KPI Cards Font Size */
+
+div[data-testid="stMetricValue"] {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+}
+
+div[data-testid="stMetricLabel"] {
+    font-size: 12px !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
 [data-testid="collapsedControl"] {
     display: block !important;
 }
