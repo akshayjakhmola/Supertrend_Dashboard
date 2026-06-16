@@ -62,6 +62,8 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+
 # ==========================
 # SIDEBAR BRANDING
 # ==========================
@@ -326,6 +328,67 @@ impact = (
 ).sum()
 
 cost_profit = raw_profit - impact
+
+
+ticker_text = (
+    f"🏆 Grade: {strategy_grade}      ✦      "
+    f"💰 Net Profit: ₹{net_profit:,.0f}      ✦      "
+    f"🎯 Win Rate: {win_rate:.1f}%      ✦      "
+    f"⚡ Profit Factor: {profit_factor:.2f}      ✦      "
+    f"📉 Max Drawdown: {max_dd_pct:.1f}%      ✦      "
+    f"🔥 Win Streak: {max_win_streak}      ✦      "
+    f"📊 Total Trades: {total_trades:,}      ✦      "
+    f"🕯️ Candles: {total_candles:,}      ✦      "
+    f"🚀 CAGR: {cagr:.1f}%      ✦      "
+) * 3
+
+st.markdown(f"""
+<style>
+.ticker-container {{
+    width: 100%;
+    overflow: hidden;
+    background: linear-gradient(90deg,#0f172a,#1e293b);
+    border-radius: 14px;
+    padding: 14px 0;
+    margin: 10px 0 20px 0;
+    border: 1px solid rgba(255,255,255,0.12);
+}}
+
+.ticker {{
+    display: inline-block;
+    white-space: nowrap;
+    color: white;
+    font-size: 18px;      /* Text Bigger */
+    font-weight: 700;     /* Bold */
+    letter-spacing: 0.5px;
+    padding-left: 100%;
+    animation: scroll-left 70s linear infinite;
+}}
+
+@keyframes scroll-left {{
+    from {{
+        transform: translateX(0);
+    }}
+    to {{
+        transform: translateX(-100%);
+    }}
+}}
+</style>
+
+<div class="ticker-container">
+    <div class="ticker">
+        {ticker_text}
+    </div>
+</div>
+""", unsafe_allow_html=True)
+st.markdown("### 🧠 Strategy Intelligence")
+
+c1, c2, c3, c4 = st.columns(4)
+
+c1.metric("Grade", strategy_grade)
+c2.metric("Win Rate", f"{win_rate}%")
+c3.metric("Win Streak", max_win_streak)
+c4.metric("Profit Factor", profit_factor)
 # ==========================
 # HEADER
 # ==========================
@@ -604,7 +667,7 @@ scorecard = pd.DataFrame({
         f"{win_rate}%",
         profit_factor,
         f"{max_dd_pct}%",
-        "14.01",
+        round(net_profit / max_dd, 2) if max_dd > 0 else 0,
         total_trades
     ]
 })
