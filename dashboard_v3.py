@@ -233,7 +233,10 @@ return_pct = round(
     2
 )
 
-years = 11
+start_date = pd.to_datetime(trades["Exit Time"]).min()
+end_date = pd.to_datetime(trades["Exit Time"]).max()
+
+years = (end_date - start_date).days / 365.25
 
 cagr = round(
     (
@@ -299,6 +302,13 @@ max_dd_pct = round(
      running_peak.max()) * 100,
     2
 )
+
+recovery_factor = (
+    round(net_profit / max_dd, 2)
+    if max_dd > 0
+    else 0
+)
+
 results = (trades["PnL INR"] > 0).astype(int)
 
 max_win_streak = 0
@@ -459,13 +469,19 @@ with tab1:
     
 with tab2:
 
+
     st.subheader("📈 Performance")
+
+    equity_curve["Account Equity"] = (
+        150000 +
+        equity_curve["Cumulative PnL INR"]
+    )
 
     fig = px.line(
         equity_curve,
         x="Exit Time",
-        y="Cumulative PnL INR",
-        title="Equity Curve"
+        y="Account Equity",
+        title="Account Equity Curve"
     )
 
     st.plotly_chart(
@@ -488,7 +504,7 @@ with tab3:
 
     c2.metric(
         "Recovery Factor",
-        round(net_profit / max_dd, 2)
+        recovery_factor
     )
 
     c3.metric(
@@ -880,7 +896,7 @@ c7.metric(
 
 c8.metric(
     "Recovery",
-    round(net_profit / max_dd, 2)
+    recovery_factor
 )
 # ==========================
 # STRATEGY SCORECARD
@@ -902,7 +918,7 @@ scorecard = pd.DataFrame({
         f"{win_rate}%",
         profit_factor,
         f"{max_dd_pct}%",
-        round(net_profit / max_dd, 2) if max_dd > 0 else 0,
+        recovery_factor,
         total_trades
     ]
 })
@@ -939,7 +955,10 @@ c2.metric("Candles", f"{total_candles:,}")
 
 c3.metric("Trades", f"{total_trades:,}")
 
-c4.metric("Recovery Factor", round(net_profit/max_dd,2))
+c4.metric(
+    "Recovery Factor",
+    recovery_factor
+)
 # ==========================
 # EQUITY CURVE
 # ==========================
@@ -948,11 +967,16 @@ st.markdown("---")
 
 st.subheader("📈 Equity Curve")
 
+equity_curve["Account Equity"] = (
+    150000 +
+    equity_curve["Cumulative PnL INR"]
+)
+
 fig = px.line(
     equity_curve,
     x="Exit Time",
-    y="Cumulative PnL INR",
-    title="Equity Curve"
+    y="Account Equity",
+    title="Account Equity Curve"
 )
 
 st.plotly_chart(
@@ -965,7 +989,6 @@ st.plotly_chart(
 # ==========================
 # DRAWDOWN CURVE
 # ==========================
-
 st.subheader("📉 Drawdown Curve")
 
 dd_df = trades.copy()
@@ -1009,12 +1032,6 @@ st.plotly_chart(
 )
 
 st.subheader("📊 Equity vs Peak")
-
-dd_df["Equity Change"] = (
-    dd_df["Account Equity"]
-    .diff()
-    .fillna(0)
-)
 
 dd_df["Equity Change"] = (
     dd_df["Account Equity"]
@@ -1283,6 +1300,60 @@ st.plotly_chart(
 # ==========================
 # MONTHLY PERFORMANCE
 # ==========================
+
+st.subheader("📅 Monthly Performance")
+
+heatmap_source = trades.copy()
+
+heatmap_source["Exit Time"] = pd.to_datetime(
+    heatmap_source["Exit Time"]
+)
+
+heatmap_source["Year"] = (
+    heatmap_source["Exit Time"].dt.year
+)
+
+heatmap_source["Month"] = (
+    heatmap_source["Exit Time"]
+    .dt.strftime("%b")
+)
+
+heatmap_data = (
+    heatmap_source
+    .groupby(["Year", "Month"])["PnL INR"]
+    .sum()
+    .reset_index()
+)
+
+month_order = [
+    "Jan","Feb","Mar","Apr","May","Jun",
+    "Jul","Aug","Sep","Oct","Nov","Dec"
+]
+
+heatmap_pivot = (
+    heatmap_data
+    .pivot(
+        index="Year",
+        columns="Month",
+        values="PnL INR"
+    )
+    .reindex(columns=month_order)
+    .fillna(0)
+)
+
+fig_heat = px.imshow(
+    heatmap_pivot,
+    text_auto=".0f",
+    aspect="auto",
+    color_continuous_scale="RdYlGn",
+    title="Year-Month Profit Heatmap"
+)
+
+st.plotly_chart(
+    fig_heat,
+    use_container_width=True,
+    key="monthly_heatmap"
+)
 
 st.markdown("---")
 
