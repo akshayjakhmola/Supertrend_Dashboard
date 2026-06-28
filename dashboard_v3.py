@@ -672,6 +672,61 @@ with tab7:
 
     st.subheader("⚠️ Drawdown Analytics Pro")
 
+    st.markdown("""
+    <div style="
+    background:linear-gradient(135deg,#0f172a,#1e3a8a);
+    padding:22px;
+    border-radius:14px;
+    border-left:6px solid #38bdf8;
+    margin-bottom:20px;
+    ">
+
+    <h4 style="color:white;margin-top:0;">
+    📘 Drawdown Calculation Methodology
+    </h4>
+
+    <p style="color:#e2e8f0;font-size:15px;line-height:1.8;">
+
+    <b>Method Used:</b> Individual Trade Drawdown (Risk-Based)<br><br>
+
+    <b>Objective</b><br>
+    This dashboard measures the risk of every individual losing trade instead of using the traditional equity curve drawdown. The objective is to evaluate the actual impact of each losing trade on the trading capital and make risk comparison easier across different months and years.<br><br>
+
+    <b>Calculation Formula</b><br>
+
+    • Drawdown ₹ = Max(0, − Trade P&amp;L)<br>
+
+    • Drawdown % = (Drawdown ₹ ÷ Initial Capital) × 100<br><br>
+
+    <b>Interpretation</b><br>
+
+    ✅ Only losing trades are considered.<br>
+
+    ✅ Winning trades are excluded from drawdown calculations.<br>
+
+    ✅ Max Day Drawdown represents the largest single losing trade within the selected period.<br>
+
+    ✅ Average Drawdown is calculated using only losing trades.<br>
+
+    ✅ All drawdown percentages are calculated using a fixed Initial Capital of <b>₹150,000</b> to maintain consistency across all years and months.
+    <br><br>
+
+    <b>Why not Traditional Equity Drawdown?</b><br>
+
+    Traditional equity drawdown measures the decline from an account's historical equity peak. This dashboard intentionally uses Individual Trade Drawdown because the primary objective is to evaluate the risk contribution of each losing trade rather than fluctuations in cumulative account equity.
+    
+    <br><br>
+
+    <b>Important:</b><br>
+
+    This methodology is specifically designed for strategy risk evaluation and internal performance analysis. It should not be interpreted as a traditional portfolio equity drawdown methodology.
+                
+                            
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
     dd_view = st.selectbox(
         "Drawdown Analysis Type",
         ["Full Equity", "Yearly", "Monthly"]
