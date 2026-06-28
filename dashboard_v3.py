@@ -2173,8 +2173,7 @@ st.markdown("""
 </style>
 
 <div class="footer">
-    <h3>✨ Welcome to Our Platform</h3>
+    <h3>✨ BACKTEST RESULT</h3>
     <p>Monitor • Analyze • Optimize</p>
-    <p>Empowering smarter decisions with modern technology.</p>
 </div>
 """, unsafe_allow_html=True)
