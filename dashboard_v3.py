@@ -461,6 +461,60 @@ c1.metric("Grade", strategy_grade)
 c2.metric("Win Rate", f"{win_rate}%")
 c3.metric("Win Streak", max_win_streak)
 c4.metric("Profit Factor", profit_factor)
+
+st.markdown("""
+<style>
+
+/* =========================
+   PREMIUM TABS V2
+========================= */
+
+/* Tabs Container */
+div[data-baseweb="tab-list"]{
+    gap:10px;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    padding:12px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+    margin-bottom:15px;
+}
+
+/* All Tabs */
+button[data-baseweb="tab"]{
+    background:transparent !important;
+    color:#CBD5E1 !important;
+    border-radius:12px !important;
+    padding:12px 22px !important;
+    font-size:16px !important;
+    font-weight:600 !important;
+    transition:all .25s ease;
+}
+
+/* Hover Effect */
+button[data-baseweb="tab"]:hover{
+    background:#334155 !important;
+    color:white !important;
+    transform:translateY(-2px);
+}
+
+/* Active Tab */
+button[data-baseweb="tab"][aria-selected="true"]{
+    background:linear-gradient(135deg,#00C853,#00E676)!important;
+    color:#08120C !important;
+    font-weight:800 !important;
+    border-radius:12px !important;
+    box-shadow:0 0 20px rgba(0,230,118,.55);
+    transform:translateY(-2px);
+}
+
+/* Remove default underline */
+button[data-baseweb="tab"]::after{
+    display:none !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
 # ==========================
 # HEADER
 # ==========================
@@ -468,7 +522,7 @@ from datetime import datetime
 tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "📊 Overview",
     "📈 Performance",
-    "⚠️ Risk",
+    "🛡️ Risk",
     "📋 Trades",
     "💰 Cost",
     "📥 Downloads",
