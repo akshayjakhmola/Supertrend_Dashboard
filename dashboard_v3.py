@@ -126,7 +126,7 @@ index_type = st.radio(
 )
 
 st.sidebar.success(
-    "Professional Trading Analytics Dashboard"
+    "NIFTY • BANKNIFTY • Combined Portfolio Analytics"
 )
 # ==========================
 # LOAD DATA
