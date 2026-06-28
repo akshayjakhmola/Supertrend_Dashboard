@@ -284,22 +284,50 @@ avg_loser = round(
     trades[trades["PnL INR"] < 0]["PnL INR"].mean(),
     2
 )
-# Drawdown
 
-equity = 150000 + trades["Cumulative PnL INR"]
 
-running_peak = equity.cummax()
 
-drawdown = equity - running_peak
+# =====================================================
+# CENTRALIZED DRAWDOWN ENGINE
+# =====================================================
+
+# Account Equity (sirf compatibility ke liye)
+equity = capital + trades["Cumulative PnL INR"]
+
+running_peak = equity
+
+# Individual Trade Loss = Drawdown
+drawdown_inr = (
+    -trades["PnL INR"]
+).clip(lower=0)
+
+drawdown_pct = (
+    drawdown_inr / capital * 100
+).round(2)
 
 max_dd = round(
-    abs(drawdown.min()),
+    drawdown_inr.max(),
     2
 )
 
 max_dd_pct = round(
-    (abs(drawdown.min()) /
-     running_peak.max()) * 100,
+    drawdown_pct.max(),
+    2
+)
+
+recovery_factor = (
+    round(net_profit / max_dd, 2)
+    if max_dd > 0 else 0
+)
+
+# Dashboard Metrics
+max_dd = round(
+    drawdown_inr.max(),
+    2
+)
+
+max_dd_pct = round(
+    drawdown_pct.max(),
     2
 )
 
@@ -534,21 +562,14 @@ with tab3:
     
     dd_df = trades.copy()
     
-    dd_df["Account Equity"] = (
-        150000 +
-        dd_df["Cumulative PnL INR"]
+    dd_df["Trade No"] = range(
+        1,
+        len(dd_df) + 1
     )
     
-    dd_df["Running Peak"] = (
-        dd_df["Account Equity"]
-        .cummax()
-    )
-    
-    dd_df["Drawdown INR"] = (
-        dd_df["Account Equity"]
-        -
-        dd_df["Running Peak"]
-    )
+    dd_df["Account Equity"] = equity.values
+    dd_df["Drawdown INR"] = -drawdown_inr.values
+    dd_df["Drawdown %"] = drawdown_pct.values
     
     dd_df["Trade No"] = range(
         1,
@@ -636,10 +657,17 @@ with tab7:
 
     dd_view = st.selectbox(
         "Drawdown Analysis Type",
-        ["Full Equity", "Yearly"]
+        ["Full Equity", "Yearly", "Monthly"]
     )
 
     equity_df = equity_curve.copy()
+
+    # Bring Individual Trade PnL
+    equity_df = equity_df.merge(
+        trades[["Exit Time", "PnL INR"]],
+        on="Exit Time",
+        how="left"
+    )
 
     equity_df["Exit Time"] = pd.to_datetime(
         equity_df["Exit Time"]
@@ -649,6 +677,18 @@ with tab7:
         equity_df["Exit Time"]
         .dt.strftime("%d-%b-%Y %I:%M %p")
     )
+
+    # Use Centralized Drawdown Engine
+
+    equity_df["Account Equity"] = (
+        capital +
+        equity_df["Cumulative PnL INR"]
+    )
+
+    equity_df["Year"] = equity_df["Exit Time"].dt.year
+
+    equity_df["Month"] = equity_df["Exit Time"].dt.strftime("%b")
+
 
     if dd_view == "Yearly":
 
@@ -664,60 +704,73 @@ with tab7:
             == selected_year
         ]
 
-    equity_df["Account Equity"] = (
-        150000 +
-        equity_df["Cumulative PnL INR"]
-    )
+    elif dd_view == "Monthly":
+        
+        selected_year = st.selectbox(
+            "Select Year",
+            sorted(equity_df["Year"].unique())
+        )
 
-    equity_df["Running Peak"] = (
-        equity_df["Account Equity"]
-        .cummax()
-    )
+        month_order = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ]
+
+        available_months = (
+            equity_df[
+                equity_df["Year"] == selected_year
+                ]["Month"]
+                .unique()
+                .tolist()
+        )
+
+        selected_month = st.selectbox(
+            "Select Month",
+            [m for m in month_order if m in available_months]
+        )
+
+        equity_df = equity_df[
+            (equity_df["Year"] == selected_year)
+            &
+            (equity_df["Month"] == selected_month)
+        ]
+
+    
+
+
+    # Use Centralized Drawdown Logic
+
+    equity_df["Running Peak"] = equity_df["Account Equity"]
 
     equity_df["Drawdown INR"] = (
-        equity_df["Account Equity"]
-        -
-        equity_df["Running Peak"]
-    )
+        -equity_df["PnL INR"]
+    ).clip(lower=0)
+
+    equity_df["Chart Drawdown"] = -equity_df["Drawdown INR"]
 
     equity_df["Drawdown %"] = (
-        abs(equity_df["Drawdown INR"])
-        /
-        equity_df["Running Peak"]
-        ) * 100
+        equity_df["Drawdown INR"] / capital * 100
+    ).round(2)
 
     c1, c2, c3 = st.columns(3)
 
-    max_dd_inr = abs(
-        equity_df["Drawdown INR"].min()
-    )
-    
-    max_equity = (
-        equity_df["Running Peak"].max()
-    )
-    
-    max_dd_pct = round(
-        (
-            abs(equity_df["Drawdown INR"].min())
-            /
-            equity_df["Running Peak"].max()
-        ) * 100,
-        2
-    )
+    max_dd_inr = equity_df["Drawdown INR"].max()
+
+    max_dd_pct_display = equity_df["Drawdown %"].max()
 
     c1.metric(
         "Max DD ₹",
-        f"₹{abs(equity_df['Drawdown INR'].min()):,.0f}"
+        f"₹{max_dd_inr:,.0f}"
     )
 
     c2.metric(
-    "Max DD %",
-    f"{max_dd_pct:.2f}%"
-)
+        "Max DD %",
+        f"{max_dd_pct_display:.2f}%"
+    )
 
     c3.metric(
-        "Equity Peak",
-        f"₹{equity_df['Running Peak'].max():,.0f}"
+        "Initial Capital",
+        f"₹{capital:,.0f}"
     )
 
     st.subheader("📋 Drawdown Records")
@@ -727,7 +780,6 @@ with tab7:
             [
                 "Exit Time",
                 "Account Equity",
-                "Running Peak",
                 "Drawdown INR",
                 "Drawdown %"
             ]
@@ -740,27 +792,28 @@ with tab7:
     fig_dd_pro = px.line(
         equity_df,
         x="Exit Time",
-        y="Drawdown INR",
+        y="Chart Drawdown",
         title="Drawdown INR Analysis"
     )
 
     fig_dd_pro.update_traces(
-        customdata=equity_df[
-            [
-                "Hover Time",
-                "Account Equity",
-                "Running Peak",
-                "Drawdown %",
-            ]
-        ].values,
 
-        hovertemplate=
-        "<b>Exit Time:</b> %{customdata[0]}<br>" +
-        "<b>Equity:</b> ₹%{customdata[1]:,.0f}<br>" +
-        "<b>Peak Equity:</b> ₹%{customdata[2]:,.0f}<br>" +
-        "<b>Drawdown ₹:</b> ₹%{y:,.0f}<br>" +
-        "<b>Drawdown %:</b> %{customdata[3]:.2f}%<br>" +
-        "<extra></extra>"
+    customdata=equity_df[
+        [
+            "Hover Time",
+            "Account Equity",
+            "Drawdown INR",
+            "Drawdown %"
+        ]
+    ].values,
+
+    hovertemplate=
+    "<b>Exit Time:</b> %{customdata[0]}<br>" +
+    "<b>Account Equity:</b> ₹%{customdata[1]:,.0f}<br>" +
+    "<b>Initial Capital:</b> ₹150,000<br>" +
+    "<b>Drawdown ₹:</b> ₹%{customdata[2]:,.0f}<br>" +
+    "<b>Drawdown %:</b> %{customdata[3]:.2f}%<br>" +
+    "<extra></extra>"
     )
     
     fig_dd_pro.update_xaxes(
@@ -779,10 +832,14 @@ with tab7:
 
     st.subheader("🏆 Top 10 Worst Drawdowns")
 
+    
+
+
     top_dd = (
         equity_df
         .sort_values(
-            "Drawdown INR"
+            "Drawdown INR",
+            ascending=False
         )
         .head(10)
     )
@@ -792,7 +849,6 @@ with tab7:
             [
                 "Exit Time",
                 "Account Equity",
-                "Running Peak",
                 "Drawdown INR",
                 "Drawdown %"
             ]
@@ -992,21 +1048,16 @@ st.subheader("📉 Drawdown Curve")
 
 dd_df = trades.copy()
 
-dd_df["Account Equity"] = (
-    150000 +
-    dd_df["Cumulative PnL INR"]
-)
+dd_df["Trade No"] = range(1, len(dd_df) + 1)
 
-dd_df["Running Peak"] = (
-    dd_df["Account Equity"]
-    .cummax()
-)
+dd_df["Account Equity"] = equity.values
 
-dd_df["Drawdown INR"] = (
-    dd_df["Account Equity"]
-    -
-    dd_df["Running Peak"]
-)
+dd_df["Running Peak"] = running_peak.values
+
+dd_df["Drawdown INR"] = -drawdown_inr.values
+
+dd_df["Drawdown %"] = drawdown_pct.values
+
 
 dd_df["Trade No"] = range(
     1,
@@ -1157,6 +1208,28 @@ yearly = (
     .reset_index()
 )
 
+# Year-wise Max Drawdown (based on centralized drawdown engine)
+
+yearly_dd = (
+    pd.DataFrame({
+        "Year": trades["Year"],
+        "Drawdown INR": drawdown_inr,
+        "Drawdown %": drawdown_pct
+    })
+    .groupby("Year")
+    .agg({
+        "Drawdown INR": "max",
+        "Drawdown %": "max"
+    })
+    .reset_index()
+)
+
+yearly = yearly.merge(
+    yearly_dd,
+    on="Year",
+    how="left"
+)
+
 trade_count = (
     trades.groupby("Year")
     .size()
@@ -1183,6 +1256,8 @@ yearly = yearly[
         "Trades",
         "PnL INR",
         "Return %",
+        "Drawdown INR",
+        "Drawdown %",
         "Avg PnL/Trade",
         "Points"
     ]
@@ -1340,12 +1415,101 @@ heatmap_pivot = (
     .fillna(0)
 )
 
+# ----------------------------
+# Professional Number Format
+# ----------------------------
+
+def format_heatmap_value(x):
+
+    if pd.isna(x):
+        return ""
+
+    if x >= 100000:
+        return f"₹{x/100000:.2f}L"
+
+    elif x >= 1000:
+        return f"₹{x/1000:.1f}K"
+
+    elif x <= -100000:
+        return f"-₹{abs(x)/100000:.2f}L"
+
+    elif x <= -1000:
+        return f"-₹{abs(x)/1000:.1f}K"
+
+    else:
+        return f"₹{x:.0f}" if x >= 0 else f"-₹{abs(x):.0f}"
+
+text_values = heatmap_pivot.apply(lambda col: col.map(format_heatmap_value))
+
+import numpy as np
+
+# Symmetric scale around zero
+max_abs = np.nanmax(np.abs(heatmap_pivot.values))
+
+
+ 
 fig_heat = px.imshow(
     heatmap_pivot,
-    text_auto=".0f",
+    text_auto=False,
     aspect="auto",
-    color_continuous_scale="RdYlGn",
-    title="Year-Month Profit Heatmap"
+
+    zmin=-max_abs,
+    zmax=max_abs,
+
+    color_continuous_scale=[
+        [0.00, "#8B0000"],   # Dark Red
+        [0.20, "#DC2626"],   # Red
+        [0.40, "#EC7B7B"],   # Light Red
+        [0.50, "#FFFFFF"],   # Zero
+        [0.60, "#0DFC60"],   # Light Green
+        [0.80, "#22C55E"],   # Green
+        [1.00, "#166534"]    # Dark Green
+    ],
+
+    title="Monthly Performance Heatmap"
+)
+
+fig_heat.update_layout(
+    coloraxis_colorbar=dict(
+        title="PnL (₹)"
+    )
+)
+
+fig_heat.update_traces(
+
+    text=text_values.values,
+
+    texttemplate="%{text}",
+
+    textfont=dict(
+        size=11,
+        color="black"
+    ),
+
+    hovertemplate=
+    "<b>Year</b>: %{y}<br>" +
+    "<b>Month</b>: %{x}<br>" +
+    "<b>PnL</b>: ₹%{z:,.0f}<br>" +
+    "<extra></extra>"
+
+)
+
+fig_heat.update_layout(
+
+    title_x=0.5,
+
+    font=dict(size=13),
+
+    coloraxis_colorbar=dict(
+
+        title="Monthly PnL",
+
+        thickness=18,
+
+        len=0.75
+
+    )
+
 )
 
 st.plotly_chart(
@@ -1356,19 +1520,160 @@ st.plotly_chart(
 
 st.markdown("---")
 
-st.subheader("📅 Monthly Performance")
+
+# ==========================
+# YEAR × MONTH PERFORMANCE MATRIX
+# ==========================
+
+pivot_df = heatmap_source.copy()
+
+pivot_table = (
+    pivot_df
+    .groupby(["Year", "Month"])["PnL INR"]
+    .sum()
+    .unstack(fill_value=0)
+    .reindex(columns=month_order)
+)
+
+# Year × Month Maximum Drawdown Matrix
+
+pivot_dd = (
+    pd.DataFrame({
+        "Year": trades["Year"],
+        "Month": trades["Exit Time"].dt.strftime("%b"),
+        "Drawdown %": drawdown_pct
+    })
+    .groupby(["Year", "Month"])["Drawdown %"]
+    .max()
+    .unstack(fill_value=0)
+    .reindex(columns=month_order)
+)
+
+# Year Total
+pivot_table["Total"] = pivot_table.sum(axis=1)
+
+# Total Trades Per Year
+yearly_trades = (
+    pivot_df
+    .groupby("Year")
+    .size()
+)
+
+pivot_table["Trades"] = yearly_trades
+
+# Return %
+pivot_table["Return %"] = (
+    pivot_table["Total"] / capital * 100
+).round(2)
+
+# Grand Total Row
+grand_total = pivot_table.sum(axis=0)
+
+pivot_table.loc["Grand Total"] = grand_total
+
+st.subheader("📊 Year × Month Performance Matrix")
+
+def highlight_profit_loss(val):
+
+    if isinstance(val, (int, float)):
+
+        if val > 0:
+            return "background-color:#DCFCE7;color:#166534;font-weight:bold"
+
+        elif val < 0:
+            return "background-color:#FEE2E2;color:#991B1B;font-weight:bold"
+
+    return ""
+
+# Add Drawdown % after every month
+
+new_pivot = pd.DataFrame(index=pivot_table.index)
+
+for month in month_order:
+    new_pivot[f"{month} PnL"] = pivot_table[month]
+
+new_pivot["Total"] = pivot_table["Total"]
+new_pivot["Trades"] = pivot_table["Trades"]
+new_pivot["Return %"] = pivot_table["Return %"]
+
+pivot_table = new_pivot
+
+styled_pivot = (
+    pivot_table.style
+    .format({
+
+        "Jan PnL": "₹{:,.0f}",
+
+        "Feb PnL": "₹{:,.0f}",
+
+        "Mar PnL": "₹{:,.0f}",
+
+        "Apr PnL": "₹{:,.0f}",
+
+        "May PnL": "₹{:,.0f}",
+
+        "Jun PnL": "₹{:,.0f}",
+
+        "Jul PnL": "₹{:,.0f}",
+
+        "Aug PnL": "₹{:,.0f}",
+
+        "Sep PnL": "₹{:,.0f}",
+
+        "Oct PnL": "₹{:,.0f}",
+
+        "Nov PnL": "₹{:,.0f}",
+
+        "Dec PnL": "₹{:,.0f}",
+
+        "Total": "₹{:,.0f}",
+        "Trades": "{:,.0f}",
+        "Return %": "{:.2f}%"
+
+    })
+    .map(highlight_profit_loss)
+)
 
 st.dataframe(
+    styled_pivot,
+    use_container_width=True
+)
+
+# Monthly Max Drawdown (Centralized Engine)
+
+monthly_dd = (
+    pd.DataFrame({
+        "Month": trades["Exit Time"].dt.strftime("%b"),
+        "Drawdown INR": drawdown_inr,
+        "Drawdown %": drawdown_pct
+    })
+    .groupby("Month")
+    .agg({
+        "Drawdown INR": "max",
+        "Drawdown %": "max"
+    })
+    .reset_index()
+)
+
+monthly = monthly.merge(
+    monthly_dd,
+    on="Month",
+    how="left"
+)
+
+st.subheader("📋 Monthly Performance Summary")
+ 
+st.dataframe(
     monthly[
-        [
-            "Month",
-            "Trades",
-            "PnL INR",
-            "Return %",
-            "Avg PnL/Trade",
-            "Points"
-        ]
-    ],
+    [
+        "Month",
+        "Trades",
+        "PnL INR",
+        "Return %",
+        "Avg PnL/Trade",
+        "Points"
+    ]
+],
     use_container_width=True
 )
 
@@ -1386,11 +1691,11 @@ fig_month = px.bar(
         "Loss": "red"
     },
     hover_data=[
-        "Trades",
-        "PnL INR",
-        "Avg PnL/Trade",
-        "Points"
-    ],
+    "Trades",
+    "PnL INR",
+    "Avg PnL/Trade",
+    "Points"
+],
     title="Monthly Return % (₹1.5L Capital)"
 )
 
