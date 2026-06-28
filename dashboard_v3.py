@@ -1625,6 +1625,10 @@ st.markdown("---")
 
 st.subheader("🎯 Strategy Scorecard")
 
+st.caption(
+    "Key performance indicators summarizing the strategy across the complete historical backtest."
+)
+
 scorecard = pd.DataFrame({
     "Metric": [
         "Win Rate",
@@ -1644,24 +1648,32 @@ scorecard = pd.DataFrame({
 
 st.dataframe(
     scorecard,
-    use_container_width=True
+    use_container_width=True,
+    hide_index=True
 )
 # ==========================
 # STRATEGY INFO
 # ==========================
 
-st.subheader("Strategy Information")
+st.subheader("ℹ️ Strategy Information")
 
-st.write(
-    f"""
+st.info(f"""
+### Institutional Backtest Configuration
 
-    Period : 2015 - 2026
+**🎯 Strategy:** {strategy_name}
 
-    Candles : {total_candles:,}
+**📅 Backtest Period:** 2015 – 2026
 
-    Strategy : {strategy_name}
-    """
-)
+**⏳ Years Tested:** 11+
+
+**🕯️ Historical Candles:** {total_candles:,}
+
+**💼 Initial Capital:** ₹150,000
+
+**⚙️ Trading Methodology:** 100% Rule-Based Systematic Strategy
+
+**📈 Market Coverage:** Bull • Bear • Sideways Market Cycles
+""")
 
 c1, c2, c3, c4 = st.columns(4)
 
@@ -1672,8 +1684,8 @@ c2.metric("Candles", f"{total_candles:,}")
 c3.metric("Trades", f"{total_trades:,}")
 
 c4.metric(
-    "Expectancy / Trade",
-    f"₹{expectancy:,.2f}"
+    "💼 Initial Capital",
+    "₹150,000"
 )
 # ==========================
 # EQUITY CURVE
