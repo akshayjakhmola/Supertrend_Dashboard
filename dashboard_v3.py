@@ -79,7 +79,6 @@ st.markdown(
     color:#00E676;
     margin-top:0;
     ">
-    Institutional Grade Backtesting Dashboard : By Akshay Jakhmola
     </h3>
 
     <p style="
