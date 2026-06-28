@@ -976,10 +976,7 @@ with tab4:
     )
 
     st.dataframe(
-        top_winners.style.background_gradient(
-            subset=["PnL INR"],
-            cmap="Greens"
-        ),
+        top_winners,
         use_container_width=True
     )
 
@@ -995,10 +992,7 @@ with tab4:
     )
 
     st.dataframe(
-        top_losers.style.background_gradient(
-            subset=["PnL INR"],
-            cmap="Reds_r"
-        ),
+        top_losers,
         use_container_width=True
     )
 
