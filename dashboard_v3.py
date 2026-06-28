@@ -79,6 +79,7 @@ st.markdown(
     color:#00E676;
     margin-top:0;
     ">
+    BACKTEST REPORT
     </h3>
 
     <p style="
