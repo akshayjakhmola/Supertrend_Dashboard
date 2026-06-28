@@ -140,7 +140,7 @@ if index_type == "NIFTY":
     drawdown_curve = pd.read_csv("reports/drawdown_curve.csv")
     tv_report = pd.read_csv("reports/tradingview_style_report.csv")
 
-    strategy_name = "Nifty Market Edge"
+    strategy_name = "Nifty Directional"
 
 elif index_type == "BANKNIFTY":
 
@@ -150,7 +150,7 @@ elif index_type == "BANKNIFTY":
     drawdown_curve = pd.read_csv("reports/banknifty_drawdown_curve.csv")
     tv_report = pd.read_csv("reports/banknifty_tradingview_style_report.csv")
 
-    strategy_name = "BankNifty Market Edge"
+    strategy_name = "BankNifty Directional"
 
 elif index_type == "COMBINED":
 
