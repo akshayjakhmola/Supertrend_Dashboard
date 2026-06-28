@@ -114,7 +114,7 @@ st.sidebar.image(
 )
 
 st.sidebar.title(
-    "Market Edge Analytics"
+    "DIRECTIONAL STRATEGY"
 )
 
 st.sidebar.markdown("---")
