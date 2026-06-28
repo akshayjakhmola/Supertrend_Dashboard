@@ -2176,6 +2176,5 @@ st.markdown("""
     <h3>✨ Welcome to Our Platform</h3>
     <p>Monitor • Analyze • Optimize</p>
     <p>Empowering smarter decisions with modern technology.</p>
-    <p>By Akshay Jakhmola</p>
 </div>
 """, unsafe_allow_html=True)
