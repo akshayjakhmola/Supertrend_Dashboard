@@ -54,6 +54,44 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+
+/* ========= Portfolio Selector ========= */
+
+div[role="radiogroup"]{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-top:10px;
+    margin-bottom:20px;
+}
+
+div[role="radiogroup"] > label{
+    background:#111827;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
+    padding:12px 20px;
+    transition:.25s;
+    min-width:170px;
+    justify-content:center;
+}
+
+div[role="radiogroup"] > label:hover{
+    transform:translateY(-2px);
+    border-color:#22C55E;
+    box-shadow:0 0 15px rgba(34,197,94,.25);
+}
+
+div[role="radiogroup"] p{
+    color:white !important;
+    font-size:16px !important;
+    font-weight:700 !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 st.caption(
     ""
 )
@@ -189,7 +227,7 @@ st.sidebar.title(
 st.sidebar.markdown("---")
 
 index_type = st.radio(
-    "Select Portfolio",
+    "🏛️ Portfolio Selection",
     ["NIFTY", "BANKNIFTY", "COMBINED"],
     horizontal=True
 )
