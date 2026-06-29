@@ -58,48 +58,117 @@ st.caption(
     ""
 )
 st.markdown(
-    """
-    <div style="
-    padding:30px;
-    border-radius:20px;
-    background:linear-gradient(135deg,#0f172a,#1e3a8a);
-    text-align:center;
-    margin-bottom:20px;
-    box-shadow:0px 6px 20px rgba(0,0,0,0.25);
-    ">
+    f"""
+<div style="
+padding:38px;
+border-radius:24px;
+background:linear-gradient(135deg,#020617 0%,#0F172A 30%,#1E3A8A 70%,#2563EB 100%);
+border:1px solid rgba(255,255,255,0.10);
+box-shadow:0 15px 40px rgba(0,0,0,.40);
+text-align:center;
+margin-bottom:25px;
+">
 
-    <h1 style="
-    color:white;
-    margin-bottom:10px;
-    ">
-    PREPARED FOR Mr. LUCKY GANGWAL
-    </h1>
+<div style="
+display:inline-block;
+padding:8px 22px;
+border-radius:999px;
+background:rgba(34,197,94,.15);
+border:1px solid rgba(34,197,94,.45);
+color:#22C55E;
+font-size:13px;
+font-weight:700;
+letter-spacing:1px;
+text-transform:uppercase;
+margin-bottom:20px;
+">
+STRATEGY PERFORMANCE DOSSIER
+</div>
 
-    <h3 style="
-    color:#00E676;
-    margin-top:0;
-    ">
-    BACKTEST REPORT
-    </h3>
+<div style="
+font-size:15px;
+color:#CBD5E1;
+letter-spacing:2px;
+text-transform:uppercase;
+margin-bottom:10px;
+">
+Prepared Exclusively For
+</div>
 
-    <p style="
-    color:#d1d5db;
-    font-size:16px;
-    ">
-    NIFTY • BANKNIFTY • Combined Directional Strategy Portfolio Analytics
-    </p>
+<h1 style="
+margin:0;
+font-size:42px;
+font-weight:800;
+color:#F8FAFC;
+letter-spacing:.8px;
+text-shadow:0 0 15px rgba(255,255,255,.12);
+">
+Mr. Lucky Gangwal
+</h1>
 
-    <p style="
-    color:#94a3b8;
-    font-size:13px;
-    color:#cbd5e1;
-    letter-spacing:.3px;
-    ">
-    Quantitative Research • Performance Tracking • Risk Analytics
-    </p>
+<div style="
+width:120px;
+height:4px;
+margin:18px auto;
+border-radius:20px;
+background:linear-gradient(90deg,#22C55E,#3B82F6);
+">
+</div>
 
-    </div>
-    """,
+<h2 style="
+margin:0;
+color:#22C55E;
+font-size:26px;
+font-weight:700;
+">
+Directional Strategy - Backtest Report
+</h2>
+
+<p style="
+margin-top:18px;
+font-size:17px;
+color:#E2E8F0;
+">
+NIFTY • BANKNIFTY • Combined Directional Strategy Portfolio
+</p>
+
+<p style="
+margin-top:10px;
+font-size:14px;
+color:#94A3B8;
+letter-spacing:.5px;
+line-height:1.8;
+">
+Quantitative Research • Performance Analytics •
+Risk Assessment • Capital Growth Evaluation
+</p>
+
+<hr style="
+margin:24px 0 18px 0;
+border:none;
+height:1px;
+background:rgba(255,255,255,.10);
+">
+
+<div style="
+display:flex;
+justify-content:center;
+gap:35px;
+flex-wrap:wrap;
+color:#CBD5E1;
+font-size:14px;
+">
+
+<div>📅 <b>Backtest:</b> 2015–2026</div>
+
+<div>📊 <b>Portfolio:</b> NIFTY | BANKNIFTY | Combined</div>
+
+<div>🔒 <b>Classification:</b> Confidential</div>
+
+</div>
+
+</div>
+""",
     unsafe_allow_html=True
 )
 
