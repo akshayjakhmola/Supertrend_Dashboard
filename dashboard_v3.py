@@ -93,7 +93,7 @@ div[role="radiogroup"] p{
 """, unsafe_allow_html=True)
 
 st.caption(
-    ""
+    "| 📢 Viewing Recommendation - For the best viewing experience, please use a desktop or laptop |"
 )
 st.markdown(
     f"""
