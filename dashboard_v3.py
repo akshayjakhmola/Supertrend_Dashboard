@@ -494,7 +494,19 @@ st.markdown(f"""
 .ticker-container {{
     width: 100%;
     overflow: hidden;
-    background: linear-gradient(90deg,#0f172a,#1e293b);
+    background: linear-gradient(
+    90deg,
+    #111111 0%,
+    #1a1a1a 40%,
+    #3d2f00 70%,
+    #5c4300 100%
+);
+
+border:1px solid rgba(255,215,0,.30);
+
+box-shadow:
+0 0 18px rgba(255,215,0,.12),
+0 8px 20px rgba(0,0,0,.35);
     border-radius: 14px;
     padding: 14px 0;
     margin: 10px 0 20px 0;
@@ -547,7 +559,14 @@ st.markdown("""
 /* Tabs Container */
 div[data-baseweb="tab-list"]{
     gap:10px;
-    background:linear-gradient(135deg,#0f172a,#1e293b);
+    background:linear-gradient(
+    90deg,
+    #5B3A00 0%,
+    #8B6508 20%,
+    #C99700 50%,
+    #8B6508 80%,
+    #5B3A00 100%
+    );
     padding:12px;
     border-radius:18px;
     border:1px solid rgba(255,255,255,.08);
