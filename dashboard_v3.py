@@ -1548,24 +1548,145 @@ with tab7:
 st.markdown(
     f"""
 <div style="
-padding:25px;
-border-radius:15px;
-background:linear-gradient(135deg,#1e3c72,#2a5298);
-text-align:center;
-box-shadow:0px 4px 15px rgba(0,0,0,0.3);
+padding:32px;
+border-radius:22px;
+background:linear-gradient(135deg,#0B1220 0%,#1E3A8A 45%,#2563EB 100%);
+border:1px solid rgba(255,255,255,0.10);
+box-shadow:0 12px 35px rgba(0,0,0,0.35);
 ">
 
-<h3 style="color:#00ff99;margin-top:0;">
-Strategy : {strategy_name}
-</h3>
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:15px;
+">
 
-<p style="color:white;">
-Bactesting Analytics Dashboard
-</p>
+<div>
 
-<p style="color:#d9d9d9;">
-2015–2026 | {total_trades:,} Trades | Multi-Year Performance Analysis
-</p>
+<div style="
+font-size:14px;
+letter-spacing:2px;
+text-transform:uppercase;
+color:#93C5FD;
+font-weight:600;
+margin-bottom:8px;
+">
+Institutional Trading Report
+</div>
+
+<h1 style="
+margin:0;
+font-size:34px;
+color:white;
+font-weight:800;
+">
+📊 {strategy_name}
+</h1>
+
+<div style="
+margin-top:8px;
+font-size:16px;
+color:#D1D5DB;
+">
+Professional Backtesting Analytics Dashboard
+</div>
+
+</div>
+
+<div style="
+background:linear-gradient(135deg,#16A34A,#22C55E);
+padding:10px 22px;
+border-radius:999px;
+font-size:15px;
+font-weight:700;
+color:white;
+box-shadow:0 0 18px rgba(34,197,94,.45);
+">
+✅ VERIFIED BACKTEST
+</div>
+
+</div>
+
+<hr style="
+margin:24px 0;
+border:none;
+height:1px;
+background:rgba(255,255,255,.12);
+">
+
+<div style="
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px;
+text-align:center;
+">
+
+<div style="
+background:rgba(255,255,255,.05);
+padding:16px;
+border-radius:14px;
+">
+<div style="color:#94A3B8;font-size:13px;">Backtest Period</div>
+<div style="color:white;font-size:22px;font-weight:700;margin-top:6px;">
+2015–2026
+</div>
+</div>
+
+<div style="
+background:rgba(255,255,255,.05);
+padding:16px;
+border-radius:14px;
+">
+<div style="color:#94A3B8;font-size:13px;">Portfolio</div>
+<div style="color:white;font-size:22px;font-weight:700;margin-top:6px;">
+{index_type}
+</div>
+</div>
+
+<div style="
+background:rgba(255,255,255,.05);
+padding:16px;
+border-radius:14px;
+">
+<div style="color:#94A3B8;font-size:13px;">Total Trades</div>
+<div style="color:white;font-size:22px;font-weight:700;margin-top:6px;">
+{total_trades:,}
+</div>
+</div>
+
+<div style="
+background:rgba(255,255,255,.05);
+padding:16px;
+border-radius:14px;
+">
+<div style="color:#94A3B8;font-size:13px;">Initial Capital</div>
+<div style="color:white;font-size:22px;font-weight:700;margin-top:6px;">
+₹{capital:,.0f}
+</div>
+</div>
+
+</div>
+
+<div style="
+margin-top:24px;
+padding-top:18px;
+border-top:1px solid rgba(255,255,255,.10);
+text-align:center;
+font-size:15px;
+color:#CBD5E1;
+line-height:1.8;
+">
+
+Comprehensive performance evaluation covering
+<b style="color:white;">Bull</b>,
+<b style="color:white;">Bear</b> &
+<b style="color:white;">Sideways</b>
+market conditions with systematic rule-based trade execution and
+institutional-grade performance analytics.
+
+</div>
 
 </div>
 """,
