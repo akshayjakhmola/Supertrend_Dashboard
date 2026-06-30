@@ -2841,7 +2841,7 @@ st.dataframe(
 st.markdown("---")
 
 st.subheader(
-    "🏆 Top 20 Winners"
+    "🟢 Top 20 Winners"
 )
 
 st.dataframe(
@@ -2941,7 +2941,7 @@ st.download_button(
 st.markdown("---")
 
 st.subheader(
-    "⚠ Top 20 Losers"
+    "⚠🔴 Top 20 Losers"
 )
 
 st.dataframe(
