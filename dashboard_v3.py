@@ -22,9 +22,26 @@ div[data-testid="stMetric"]{
     transition:all .25s ease;
 }
 
+div[data-testid="stMetric"]{
+    background:#111827;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    padding:14px;
+    transition:all .35s ease;
+    cursor:pointer;
+}
+
 div[data-testid="stMetric"]:hover{
-    box-shadow:0 0 15px rgba(59,130,246,.18);
-    transition:.25s ease;
+
+    transform:translateY(-6px) scale(1.03);
+
+    border:1px solid rgba(59,130,246,.65);
+
+    box-shadow:
+        0 0 15px rgba(59,130,246,.40),
+        0 0 35px rgba(59,130,246,.30),
+        0 0 60px rgba(59,130,246,.20),
+        0 12px 35px rgba(0,0,0,.45);
 }
 
 div[data-testid="stMetricLabel"]{
