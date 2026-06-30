@@ -134,7 +134,10 @@ Prepared For
 </div>
 
 <h1 style="
-margin:0;
+margin:0 auto;
+width:100%;
+text-align:center;
+display:block;
 font-size:18px;
 font-weight:800;
 color:#F8FAFC;
