@@ -152,9 +152,10 @@ Mr. Lucky Gangwal
 <div style="
 width:120px;
 height:4px;
-margin:18px auto;
-border-radius:20px;
 background:linear-gradient(90deg,#22C55E,#3B82F6);
+border-radius:999px;
+margin:20px auto 25px auto;
+display:block;
 ">
 </div>
 
