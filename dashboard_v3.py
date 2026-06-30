@@ -178,7 +178,7 @@ Directional Strategy - Backtest Report
 </h2>
 
 <p style="
-margin-top:18px;
+margin-top:15px;
 font-size:17px;
 color:#E2E8F0;
 ">
