@@ -129,7 +129,7 @@ font-weight:600;
 letter-spacing:4px;
 text-transform:uppercase;
 color:#CBD5E1;
-margin-bottom:2px;
+margin-bottom:1px;
 text-align:center;
 ">
 PREPARED FOR
