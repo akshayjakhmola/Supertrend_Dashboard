@@ -130,7 +130,7 @@ letter-spacing:2px;
 text-transform:uppercase;
 margin-bottom:10px;
 ">
-Prepared Exclusively For
+Prepared For
 </div>
 
 <h1 style="
