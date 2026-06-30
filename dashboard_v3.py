@@ -125,6 +125,8 @@ STRATEGY PERFORMANCE DOSSIER
 
 <div style="
 font-size:15px;
+width:100%;
+text-align:center;
 color:#CBD5E1;
 letter-spacing:2px;
 text-transform:uppercase;
