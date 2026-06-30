@@ -124,15 +124,15 @@ STRATEGY PERFORMANCE DOSSIER
 </div>
 
 <div style="
-font-size:15px;
-width:100%;
-text-align:center;
-color:#CBD5E1;
-letter-spacing:2px;
+font-size:14px;
+font-weight:600;
+letter-spacing:4px;
 text-transform:uppercase;
-margin-bottom:10px;
+color:#CBD5E1;
+margin-bottom:14px;
+text-align:center;
 ">
-Prepared For
+PREPARED FOR
 </div>
 
 <h1 style="
