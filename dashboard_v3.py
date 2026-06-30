@@ -92,8 +92,18 @@ div[role="radiogroup"] p{
 </style>
 """, unsafe_allow_html=True)
 
-st.caption(
-    "| 📢 Viewing Recommendation - For the best viewing experience, please use a desktop or laptop |"
+st.markdown(
+    """
+<div style="
+margin-top:-10px;
+margin-bottom:8px;
+font-size:15px;
+color:#E5E7EB;
+">
+📢 <b>Viewing Recommendation</b> - For the best viewing experience, please use a desktop or laptop.
+</div>
+""",
+    unsafe_allow_html=True
 )
 st.markdown(
     f"""
