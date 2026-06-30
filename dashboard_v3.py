@@ -97,7 +97,7 @@ st.markdown(
 <div style="
 margin-top:-10px;
 margin-bottom:8px;
-font-size:15px;
+font-size:12px;
 color:#E5E7EB;
 ">
 📢 <b>Viewing Recommendation</b> - For the best viewing experience, please use a desktop or laptop.
